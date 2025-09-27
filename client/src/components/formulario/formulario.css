@@ -1,0 +1,164 @@
+
+
+.formulario {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .titulo {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .subtitulo {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+  
+  .formulario-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .campo {
+    display: flex;
+    flex-direction: column; 
+  }
+  
+  .campo-label {
+    font-weight: normal; 
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 8px; 
+    text-align: left;
+  }
+  
+  .campo-input, .campo-select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px; 
+    font-size: 16px;
+    font-family: inherit;
+    background-color: #f8f8f8; 
+  }
+  
+  .campo-input:focus, .campo-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    background-color: white;
+  }
+  
+ 
+  .nav-header {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffe600;
+    border: 0;
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    height: 60px;
+    width: auto;
+  }
+
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: #3483fa;
+  }
+  
+  .checkbox-label {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .terminos-container {
+    margin-top: 15px;
+  }
+  
+  .terminos-texto {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+  }
+  
+  .link {
+    color: #3483fa;
+    cursor: pointer;
+  }
+  
+  .link:hover {
+    text-decoration: underline;
+  }
+  
+
+  .botones-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+  }
+  
+  .boton-primario {
+    width: 100%;
+    padding: 16px;
+    background-color: #3483fa;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .boton-primario:hover {
+    background-color: #2968c8;
+  }
+  
+  .boton-secundario {
+    width: 100%;
+    padding: 16px;
+    background-color: #e8f4fd;
+    color: #3483fa;
+    border: 1px solid #3483fa;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .boton-secundario:hover {
+    background-color: #d0e8f7;
+  }
+
+  .boton-primario:disabled {
+    background-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+  }
+  
+  .boton-primario:disabled:hover {
+    background-color: #ccc;
+  }
