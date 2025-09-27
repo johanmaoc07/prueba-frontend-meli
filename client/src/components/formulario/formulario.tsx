@@ -66,7 +66,7 @@ const Formulario = () => {
     const success = await updateUser(urlParams.userId, formData);
     
     if (success) {
-      console.log('¡Datos actualizados correctamente!');
+      console.log('Datos actualizados correctamente');
       const nextUrl = `/checkout/confirmation?referrer=/checkout/review&token=${urlParams.token}`;
       console.log('Redirigiendo a:', nextUrl);
     }
@@ -84,10 +84,10 @@ const Formulario = () => {
           <img 
             src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.21.22/mercadolibre/logo__large_plus.png" 
             alt="MercadoLibre" 
-            className="meli-logo"
+            className="logo"
           />
         </div>
-        <div className="formulario-revision">
+        <div className="formulario">
           <div className="loading">Cargando datos del usuario...</div>
         </div>
       </div>
@@ -100,7 +100,7 @@ const Formulario = () => {
         <img 
           src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.21.22/mercadolibre/logo__large_plus.png" 
           alt="MercadoLibre" 
-          className="meli-logo"
+          className="logo"
         />
       </div>
 
@@ -111,7 +111,7 @@ const Formulario = () => {
       )}
 
       <div className="formulario">
-        <div className="titulo-principal">
+        <div className="titulo">
           Revisión de Datos
         </div>
         <div className="subtitulo">
@@ -158,7 +158,7 @@ const Formulario = () => {
           </div>
 
           {validationErrors.length > 0 && (
-            <div className="errores-container">
+            <div className="errores">
               {validationErrors.map((error, index) => (
                 <div key={index} className="error-mensaje">
                   {error}
