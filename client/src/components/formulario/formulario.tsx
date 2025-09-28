@@ -1,13 +1,21 @@
 
 
 import React, { useState, useEffect } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
+import Toast from '../toast/toast';
+
+
+import config from '../../utils/config';
 import { useUsuario } from '../../hooks/useUsuario';
 import { useCountries } from '../../hooks/useCountries';
 import './formulario.css';
 
 const Formulario = () => {
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const { usuario, isLoading: userLoading, loadUserData, updateUser, validationErrors } = useUsuario();
   const { countryOptions, isLoading: countriesLoading } = useCountries();
+  const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+
 
   const [formData, setFormData] = useState({
     fullname: '',
@@ -28,9 +36,9 @@ const Formulario = () => {
     const params = new URLSearchParams(window.location.search);
     const referrer = params.get('referrer') || '/previous-step';
     const token = params.get('token') || '123';
-    
+
     const userId = extractUserIdFromToken(token);
-    
+
     setUrlParams({ referrer, token, userId });
     loadUserData(userId);
   }, [loadUserData]);
@@ -62,28 +70,43 @@ const Formulario = () => {
     setAcceptedTerms(checked);
   };
 
+  const handleCaptchaChange = (value: string | null) => {
+    setCaptchaValue(value);
+  };
+
   const handleSubmit = async () => {
+    if (!captchaValue) {
+      setToast({ message: 'Debe completar el captcha', type: 'error' });
+
+      return;
+    }
+
     const success = await updateUser(urlParams.userId, formData);
-    
+
     if (success) {
-      console.log('Datos actualizados correctamente');
-      const nextUrl = `/checkout/confirmation?referrer=/checkout/review&token=${urlParams.token}`;
-      console.log('Redirigiendo a:', nextUrl);
+      setToast({ message: 'Datos guardados exitosamente', type: 'success' });
+
+      setTimeout(() => {
+        const nextUrl = `/checkout/confirmation?referrer=/checkout/review&token=${urlParams.token}`;
+        console.log('Redirigiendo a:', nextUrl);
+      }, 1500);
+    } else {
+      setToast({ message: 'Error al guardar los datos', type: 'error' });
     }
   };
 
   const handleGoBack = () => {
     const backUrl = urlParams.referrer || '/previous-step';
-    console.log('Volviendo a:', backUrl);
+    window.location.href = backUrl;
   };
 
   if (userLoading || countriesLoading) {
     return (
       <div>
         <div className="nav-header">
-          <img 
-            src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.21.22/mercadolibre/logo__large_plus.png" 
-            alt="MercadoLibre" 
+          <img
+            src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.21.22/mercadolibre/logo__large_plus.png"
+            alt="MercadoLibre"
             className="logo"
           />
         </div>
@@ -97,9 +120,9 @@ const Formulario = () => {
   return (
     <div>
       <div className="nav-header">
-        <img 
-          src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.21.22/mercadolibre/logo__large_plus.png" 
-          alt="MercadoLibre" 
+        <img
+          src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.21.22/mercadolibre/logo__large_plus.png"
+          alt="MercadoLibre"
           className="logo"
         />
       </div>
@@ -115,14 +138,14 @@ const Formulario = () => {
           Revisión de Datos
         </div>
         <div className="subtitulo">
-          Verificá que tu información esté correcta
+          Verifica que tu información este correcta
         </div>
-        
+
         <div className="formulario-container">
           <div className="campo">
             <div className="campo-label">Nombre completo</div>
-            <input 
-              type="text" 
+            <input
+              type="text"
               className="campo-input"
               placeholder="Ingresá tu nombre completo"
               value={formData.fullname}
@@ -132,7 +155,7 @@ const Formulario = () => {
 
           <div className="campo">
             <div className="campo-label">País</div>
-            <select 
+            <select
               className="campo-select"
               value={formData.country}
               onChange={(e) => handleInputChange('country', e.target.value)}
@@ -148,8 +171,8 @@ const Formulario = () => {
 
           <div className="campo">
             <div className="campo-label">Dirección</div>
-            <input 
-              type="text" 
+            <input
+              type="text"
               className="campo-input"
               placeholder="Ingresá tu dirección completa"
               value={formData.address}
@@ -175,17 +198,24 @@ const Formulario = () => {
             </label>
           </div>
 
-          <div className="botones-container">
-            <button 
-              type="button" 
-              className="boton-primario"
+          <div className="captcha">
+            <ReCAPTCHA
+              sitekey={config.captchaSiteKey}
+              onChange={handleCaptchaChange}
+            />
+          </div>
+
+          <div className="botones">
+            <button
+              type="button"
+              className={`boton-primario ${(!acceptedTerms || !captchaValue) ? 'boton-disabled' : ''}`}
               onClick={handleSubmit}
-              disabled={userLoading || !acceptedTerms}
+              disabled={userLoading || !acceptedTerms || !captchaValue}
             >
               {userLoading ? 'Actualizando...' : 'Continuar'}
             </button>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="boton-secundario"
               onClick={handleGoBack}
             >
@@ -194,6 +224,13 @@ const Formulario = () => {
           </div>
         </div>
       </div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 };

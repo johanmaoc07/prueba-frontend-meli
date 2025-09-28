@@ -112,7 +112,7 @@
   }
   
 
-  .botones-container {
+  .botones {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -162,3 +162,9 @@
   .boton-primario:disabled:hover {
     background-color: #ccc;
   }
+
+  .captcha {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
