@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Toast from '../toast/toast';
+import { useLanguage } from '../../hooks/useLenguaje';
+
 
 
 import config from '../../utils/config';
@@ -11,6 +13,7 @@ import { useCountries } from '../../hooks/useCountries';
 import './formulario.css';
 
 const Formulario = () => {
+  const { t } = useLanguage();
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const { usuario, isLoading: userLoading, loadUserData, updateUser, validationErrors } = useUsuario();
   const { countryOptions, isLoading: countriesLoading } = useCountries();
@@ -76,22 +79,15 @@ const Formulario = () => {
 
   const handleSubmit = async () => {
     if (!captchaValue) {
-      setToast({ message: 'Debe completar el captcha', type: 'error' });
-
+      setToast({ message: t.toast.captchaRequired, type: 'error' });
       return;
     }
 
     const success = await updateUser(urlParams.userId, formData);
 
     if (success) {
-      setToast({ message: 'Datos guardados exitosamente', type: 'success' });
-
-      setTimeout(() => {
-        const nextUrl = `/checkout/confirmation?referrer=/checkout/review&token=${urlParams.token}`;
-        console.log('Redirigiendo a:', nextUrl);
-      }, 1500);
-    } else {
-      setToast({ message: 'Error al guardar los datos', type: 'error' });
+      setToast({ message: t.toast.saveSuccess, type: 'success' });
+      console.log('Datos guardados. En producción redirigiría a confirmación');
     }
   };
 
@@ -111,7 +107,7 @@ const Formulario = () => {
           />
         </div>
         <div className="formulario">
-          <div className="loading">Cargando datos del usuario...</div>
+          <div className="loading">{t.loading}.</div>
         </div>
       </div>
     );
@@ -127,40 +123,35 @@ const Formulario = () => {
         />
       </div>
 
-      {process.env.NODE_ENV === 'development' && (
-        <div style={{ padding: '10px', backgroundColor: '#f0f0f0', fontSize: '12px' }}>
-          <strong>Debug URL Params:</strong> referrer={urlParams.referrer}, token={urlParams.token}, userId={urlParams.userId}
-        </div>
-      )}
 
       <div className="formulario">
         <div className="titulo">
-          Revisión de Datos
+          {t.title}
         </div>
         <div className="subtitulo">
-          Verifica que tu información este correcta
+          {t.subtitle}
         </div>
 
         <div className="formulario-container">
           <div className="campo">
-            <div className="campo-label">Nombre completo</div>
+            <div className="campo-label">{t.fullname}</div>
             <input
               type="text"
               className="campo-input"
-              placeholder="Ingresá tu nombre completo"
+              placeholder={t.placeholders.fullname}
               value={formData.fullname}
               onChange={(e) => handleInputChange('fullname', e.target.value)}
             />
           </div>
 
           <div className="campo">
-            <div className="campo-label">País</div>
+            <div className="campo-label">{t.country}</div>
             <select
               className="campo-select"
               value={formData.country}
               onChange={(e) => handleInputChange('country', e.target.value)}
             >
-              <option value="">Seleccioná tu país</option>
+              <option value="">{t.placeholders.country}</option>
               {countryOptions.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -170,11 +161,11 @@ const Formulario = () => {
           </div>
 
           <div className="campo">
-            <div className="campo-label">Dirección</div>
+            <div className="campo-label">{t.address}</div>
             <input
               type="text"
               className="campo-input"
-              placeholder="Ingresá tu dirección completa"
+              placeholder={t.placeholders.address}
               value={formData.address}
               onChange={(e) => handleInputChange('address', e.target.value)}
             />
@@ -194,7 +185,7 @@ const Formulario = () => {
             <input type="checkbox" id="sms-whatsapp" className="checkbox" checked={acceptedTerms}
               onChange={(e) => handleTermsChange(e.target.checked)} />
             <label htmlFor="sms-whatsapp" className="checkbox-label">
-              Acepto que me contacten por SMS y WhatsApp.
+              {t.terms}
             </label>
           </div>
 
@@ -212,14 +203,14 @@ const Formulario = () => {
               onClick={handleSubmit}
               disabled={userLoading || !acceptedTerms || !captchaValue}
             >
-              {userLoading ? 'Actualizando...' : 'Continuar'}
+              {userLoading ? t.buttons.updating : t.buttons.continue}
             </button>
             <button
               type="button"
               className="boton-secundario"
               onClick={handleGoBack}
             >
-              Volver
+              {t.buttons.back}
             </button>
           </div>
         </div>
